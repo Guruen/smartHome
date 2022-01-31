@@ -1,1 +1,12 @@
 /* You can add global styles to this file, and also import other style files */
+html, body { height: 100%; width: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+.backgroundcontainer { background-color: #F2F8F2; }
+.navigation { box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2); background-color: white; border-color: #C0DEC0; border-style: solid; border-width: 0px 1px 1px 1px; border-radius: 0px 0px 3px 3px; }
+.shadow { box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2) }
+.box {background-color: white; border-radius: 3px;}
+.boxTitle {font-size: 1.25rem; padding: 5px; border-bottom: 1px solid #C0DEC0}
+.boxContent {font-size: 0.9rem; padding: 5px;}
+.borderRight { border-right: 1px solid #C0DEC0; }
+.mat-icon { vertical-align: middle; }
+.warning-icon { color: orangered; }
