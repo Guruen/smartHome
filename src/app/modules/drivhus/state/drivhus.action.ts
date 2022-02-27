@@ -1,4 +1,5 @@
 import {CurrentTemperatureDto} from "../dto/currentTemperature.dto";
+import { temperature } from "../dto/temperature.dto";
 import {wifiDto} from "../dto/wifi.dto";
 
 export class listenForCurrentTemperature{
@@ -28,4 +29,9 @@ export class updateWifiInfo{
 
   }
   static readonly type = '[Drivhus] Update WiFi Strength'
+}
+
+export class getTemperatureData{
+  constructor(public date: string, public period: string) {}
+  static readonly type = '[Drivhus] GET Temperature Data'
 }

@@ -8,6 +8,8 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {NgxsModule} from "@ngxs/store";
 import { Socket } from 'ngx-socket-io';
 import {environment} from "../environments/environment";
+import { NgxEchartsModule } from 'ngx-echarts';
+import { HttpClientModule } from '@angular/common/http';
 
 @Injectable()
 export class SocketDrivhus extends Socket {
@@ -27,6 +29,10 @@ export class SocketDrivhus extends Socket {
     NgxsModule.forRoot([], {
       developmentMode: !environment.production
     }),
+    NgxEchartsModule.forRoot({
+      echarts: () => import('echarts')
+    }),
+    HttpClientModule,
     SharedModule
   ],
   providers: [SocketDrivhus],

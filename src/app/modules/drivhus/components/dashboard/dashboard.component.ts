@@ -11,7 +11,7 @@ import {
 import {wifiDto} from "../../dto/wifi.dto";
 
 @Component({
-  selector: 'app-dashboard',
+  selector: 'drivhus-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })

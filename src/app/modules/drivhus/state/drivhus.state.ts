@@ -2,6 +2,7 @@ import {Action, Selector, State, StateContext} from "@ngxs/store";
 import {Injectable} from "@angular/core";
 import {CurrentTemperatureDto} from "../dto/currentTemperature.dto"
 import {
+  getTemperatureData,
   listenForCurrentTemperature,
   listenForWifiInfo,
   stopListeningForCurrentTemperature,
@@ -12,10 +13,13 @@ import {
 import {Subscription} from "rxjs";
 import {DrivhusService} from "../services/drivhus.service";
 import {wifiDto} from "../dto/wifi.dto";
+import { temperature } from "../dto/temperature.dto";
+import { take, tap } from "rxjs/operators";
 
 export interface DrivhusStateModel {
   currentTemperature: CurrentTemperatureDto;
   wifiInfo: wifiDto;
+  temperatureData: temperature[];
 }
 
 @State<DrivhusStateModel>({
@@ -25,7 +29,8 @@ export interface DrivhusStateModel {
 
 @Injectable()
 export class DrivhusState {
-  private drivhusSubs: Subscription | undefined;
+  private currentTempSub: Subscription | undefined;
+  private currentWifiSub: Subscription | undefined;
 
   constructor(private drivhusService: DrivhusService) {
   }
@@ -40,9 +45,14 @@ export class DrivhusState {
     return state.wifiInfo;
   }
 
+  @Selector()
+  static temperatureData(state: DrivhusStateModel): temperature[] {
+    return state.temperatureData
+  }
+
   @Action(listenForCurrentTemperature)
   listenForCurrentTemperature(ctx: StateContext<DrivhusStateModel>): void {
-    this.drivhusSubs = this.drivhusService.listenForCurrentTemperature()
+    this.currentTempSub = this.drivhusService.listenForCurrentTemperature()
       .subscribe( currentTemp => {
         ctx.dispatch(new updateCurrentTemperature(currentTemp))
       })
@@ -50,8 +60,8 @@ export class DrivhusState {
 
   @Action(stopListeningForCurrentTemperature)
   stopListeningForCurrentTemperature(ctx: StateContext<DrivhusStateModel>): void {
-    if (this.drivhusSubs) {
-      this.drivhusSubs.unsubscribe()
+    if (this.currentTempSub) {
+      this.currentTempSub.unsubscribe()
     }
   }
 
@@ -67,7 +77,7 @@ export class DrivhusState {
 
   @Action(listenForWifiInfo)
   listenForWifiInfo(ctx: StateContext<DrivhusStateModel>): void {
-    this.drivhusSubs = this.drivhusService.listenForWifiStrength()
+    this.currentWifiSub = this.drivhusService.listenForWifiStrength()
       .subscribe(wifiInfo => {
         ctx.dispatch(new updateWifiInfo(wifiInfo))
       })
@@ -75,8 +85,8 @@ export class DrivhusState {
 
   @Action(stopListeningForWifiInfo)
   stopListeningForWifiInfo(ctx: StateContext<DrivhusStateModel>): void {
-    if (this.drivhusSubs) {
-      this.drivhusSubs.unsubscribe()
+    if (this.currentWifiSub) {
+      this.currentWifiSub.unsubscribe()
     }
   }
 
@@ -88,5 +98,16 @@ export class DrivhusState {
       wifiInfo: uwi.wifiInfo
     }
     ctx.setState(newState)
+  }
+
+  @Action(getTemperatureData, { cancelUncompleted: true })
+  getTemperatureData(ctx: StateContext<DrivhusStateModel>, filter: getTemperatureData): void {
+    this.drivhusService.getTemperatureData(filter.date, filter.period)
+      .pipe(
+        take(1),
+        tap(temperatureData => {
+          ctx.patchState({temperatureData})
+        })
+      ).subscribe();
   }
 }

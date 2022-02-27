@@ -1,0 +1,22 @@
+<div fxLayoutAlign="center start">
+    <div fxFlex fxLayout="column">
+      <div fxFlex fxLayout="column" style="width: 450px" class="shadow box">
+        <div fxFlex="grow" style="padding: 0px" fxLayoutAlign="center center" class="boxTitle">
+          <div fxFlex fxLayoutAlign="start center">
+            <button mat-button class="button" (click)="selectPeriod('day')">dag</button>
+            <button mat-button class="button" (click)="selectPeriod('month')">måned</button>
+            <button mat-button class="button" (click)="selectPeriod('year')">år</button>
+          </div>
+          <div fxFlex="grow" fxLayoutAlign="end center" class="boxContent">
+            {{selectedPeriod}}
+          </div>
+        </div>
+        <div fxFlex class="boxContent">
+          <div *ngIf="tempDataArray; else loading" fxLayoutAlign="center center" echarts [options]="options" class="demo-chart"></div>
+          <ng-template #loading>
+            no data yet!
+          </ng-template>
+        </div>
+      </div>
+    </div>
+</div>

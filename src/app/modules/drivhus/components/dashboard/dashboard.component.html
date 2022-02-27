@@ -1,5 +1,5 @@
 <div fxLayoutAlign="center start">
-  <div>
+  <div fxFlex fxLayout="column">
     <div fxFlex fxLayout="column" style="width: 450px" class="shadow box">
       <div fxLayoutAlign="center center" class="boxTitle">
         <span fxFlex="grow">Drivhuset</span>
@@ -8,7 +8,7 @@
           <span style="float:right"><mat-icon class="warning-icon" matTooltip="forbindelse mistet!">wifi_off</mat-icon></span>
         </ng-template>
       </div>
-      <div fxFlex fxLayout="row" fxLayoutAlign="center" *ngIf="currentTemperature$ | async as temp">
+      <div fxFlex fxLayout="row" fxLayoutAlign="center" *ngIf="currentTemperature$ | async as temp; else noConnection">
         <div fxFlex="25" class="boxContent borderRight">
           <div fxLayoutAlign="start start">Indenfor 1</div>
           <div fxLayoutAlign="end" style="font-size: 1.25rem">{{temp.temperature_inside_1 | number : '1.0-1'}}&deg;C</div>
@@ -26,6 +26,14 @@
           <div fxLayoutAlign="end" style="font-size: 1.25rem">{{temp.temperature_outside | number : '1.0-1'}}&deg;C</div>
         </div>
       </div>
+    </div>
+    <ng-template #noConnection>
+      <div fxFlex style="padding: 1.5rem; font-style: italic;" fxLayoutAlign="center center">
+        Waiting on connection ...
+      </div>
+    </ng-template>
+    <div style="margin-top: 10px;">
+      <drivhus-chart></drivhus-chart>
     </div>
   </div>
 </div>
